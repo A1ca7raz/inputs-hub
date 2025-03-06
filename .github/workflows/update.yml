@@ -1,0 +1,76 @@
+name: "Update lock weekly"
+
+on:
+  push:
+    paths:
+      - '.github/workflows/update.yml'
+  schedule:
+    - cron:  '19 18 * * 2'
+  repository_dispatch:
+  workflow_dispatch:
+    inputs:
+      update_lock:
+        description: Update flake.lock
+        required: true
+        default: true
+        type: boolean
+
+jobs:
+  bump_lock:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    outputs:
+      packages: ${{ steps.pkgs.outputs.packages }}
+
+    steps:
+    - name: 0-1. Checkout repository
+      uses: actions/checkout@v4
+
+    - name: 0-2. Install nix
+      uses: cachix/install-nix-action@V30
+      with:
+        nix_path: nixpkgs=channel:nixos-unstable
+        extra_nix_config: |
+          experimental-features = nix-command flakes
+          access-tokens = github.com=${{ secrets.GITHUB_TOKEN }}
+          extra-substituters = https://a1ca7raz-nur.cachix.org https://cache.garnix.io
+          extra-trusted-public-keys = a1ca7raz-nur.cachix.org-1:twTlSh62806B8lfG0QQzge4l5srn9Z8/xxyAFauOZnQ= cache.garnix.io:CTFPyKSLcx5RMJKfLo5EEPUObbA78b0YQ2DTCJXqr9g=
+
+    - name: 1-1. Update flake.lock
+      if: ${{ inputs.update_lock == true || github.event_name != 'workflow_dispatch' }}
+      run: nix flake update
+
+    - name: 2-1. Show flake metadata
+      id: pkgs
+      if: ${{ always() }}
+      run: |
+        nix flake metadata
+        echo "packages=`nix eval --json .#packages.x86_64-linux --apply 'builtins.attrNames'`" >> $GITHUB_OUTPUT
+
+    - name: 2-2. Show flake information
+      if: ${{ always() }}
+      run: nix flake show
+
+    - name: 2-3. Check evaluation
+      if: ${{ always() }}
+      run: nix flake check --no-build --no-allow-import-from-derivation
+
+    - name: 3-1. Bump flake.lock
+      if: ${{ inputs.update_lock == true }}
+      uses: stefanzweifel/git-auto-commit-action@v5
+      with:
+        commit_message: "Update: flake.lock"
+        file_pattern: "flake.lock"
+
+  build_bundles:
+    needs: bump_lock
+    secrets: inherit
+    permissions:
+      contents: write
+    strategy:
+      matrix:
+        package: ${{ needs.bump_lock.outputs.packages }}
+    uses: ./.github/workflows/build.yml
+    with:
+      package: ${{ matrix.package }}
