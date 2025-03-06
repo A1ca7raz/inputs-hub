@@ -94,15 +94,23 @@
           inherit system;
         };
 
-        inherit (pkgs)
-          mkShell
-          buildEnv
-        ;
+        mkBundle = name: apps: {
+          "bundle_${name}" = pkgs.stdenv.mkDerivation {
+            name = "${name}-bundle";
+            srcs = with builtins; filter isAttrs (attrValues apps);
 
-        mkBundle = name: paths: buildEnv { inherit name paths; };
+            phases = [ "installPhase" ];
+            installPhase = ''
+              mkdir -p $out
+              for _src in $srcs; do
+                [[ -e "$out/$(basename $_src)" ]] || ln -s "$_src"  "$out/$(basename $_src)"
+              done
+            '';
+          };
+        };
       in rec {
         # Packages from external flakes
-        packages = {
+        legacyPackages = {
           kwin-effects-forceblur = pkgs.kdePackages.callPackage (inputs.kwin-effects-forceblur + "/package.nix") {};
           kwin-gestures = pkgs.kdePackages.callPackage (inputs.kwin-gestures + "/package.nix") {};
 
@@ -113,21 +121,20 @@
 
         # With packages from nixpkgs that request cache
         # Will be used by CI
-        legacyPackages = {
+        packages = {
           inherit (pkgs)
             obsidian
             unrar
             veracrypt
             wpsoffice
           ;
-        } // packages
+        } // legacyPackages
           // mkBundle "lanzaboote" inputs.lanzaboote.packages.${system}
           // mkBundle "nix-index-database" inputs.nix-index-database.packages.${system}
           // mkBundle "sops-nix" inputs.lanzaboote.packages.${system}
-          // mkBundle "spicetify-pkgs" inputs.spicetify-nix.legacyPackages.${system}
         ;
 
-        devShells.default = mkShell {};
+        devShells.default = pkgs.mkShell {};
       }
     ) // {
       overlays.external = final: prev: self.packages.x86_64-linux;
