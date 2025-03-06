@@ -1,5 +1,5 @@
 check:
-	nix flake check --no-build --no-allow-import-from-derivation
+	nix flake check --no-build --no-allow-import-from-derivation --show-trace
 
 update:
 	nix flake update
