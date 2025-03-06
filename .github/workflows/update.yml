@@ -69,7 +69,7 @@ jobs:
         commit_message: "Update: flake.lock"
         file_pattern: "flake.lock"
 
-  build_bundles:
+  build:
     needs: bump_lock
     secrets: inherit
     permissions:
