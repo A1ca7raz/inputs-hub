@@ -61,13 +61,14 @@ jobs:
     - name: 0-3. Install Nix (Determinate Nix)
       uses: DeterminateSystems/nix-installer-action@main
       with:
-        determinate: true
+        # determinate: true
         extra-conf: |
           extra-substituters = https://a1ca7raz-nur.cachix.org https://cache.garnix.io
           extra-trusted-public-keys = a1ca7raz-nur.cachix.org-1:twTlSh62806B8lfG0QQzge4l5srn9Z8/xxyAFauOZnQ= cache.garnix.io:CTFPyKSLcx5RMJKfLo5EEPUObbA78b0YQ2DTCJXqr9g=
 
-    - name: 0.4. Setup FlakeHub cache
-      uses: DeterminateSystems/flakehub-cache-action@main
+    # NOTE: Go fuck yourself with no public cache
+    # - name: 0.4. Setup FlakeHub cache
+    #   uses: DeterminateSystems/flakehub-cache-action@main
 
     - name: 0-5. Setup Cachix
       uses: cachix/cachix-action@v15
