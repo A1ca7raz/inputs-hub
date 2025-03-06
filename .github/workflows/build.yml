@@ -88,16 +88,15 @@ jobs:
       if: ${{ inputs.pre_check == true }}
       run: nix flake check --no-build --no-allow-import-from-derivation
 
-    - name: 2-1. Build Nix packages bundles
-      if: ${{ inputs.packages != 0 }}
+    - name: 2-1. Build ${{ inputs.package }}
       run: |
-        nix build .#packages.x86_64-linux.${{ inputs.packages }} -v --show-trace
+        nix build .#packages.x86_64-linux.${{ inputs.package }} -v --show-trace
 
-    - name: 2-2. Build entire nurpkgs
-      if: ${{ inputs.packages == 0 }}
-      run: |
-        nix flake check --no-allow-import-from-derivation -v --show-trace
+    # - name: 2-2. Build entire nurpkgs
+    #   if: ${{ inputs.package == 0 }}
+    #   run: |
+    #     nix flake check --no-allow-import-from-derivation -v --show-trace
 
     - name: 3-1. Push cache to Cachix
       if: ${{ inputs.push_cache == true }}
-      run: bash ./.github/push_cache.sh ${{ inputs.packages }}
+      run: bash ./.github/push_cache.sh ${{ inputs.package }}
