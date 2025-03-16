@@ -66,9 +66,8 @@ jobs:
           extra-substituters = https://a1ca7raz-nur.cachix.org https://cache.garnix.io
           extra-trusted-public-keys = a1ca7raz-nur.cachix.org-1:twTlSh62806B8lfG0QQzge4l5srn9Z8/xxyAFauOZnQ= cache.garnix.io:CTFPyKSLcx5RMJKfLo5EEPUObbA78b0YQ2DTCJXqr9g=
 
-    # NOTE: Go fuck yourself with no public cache
-    # - name: 0.4. Setup FlakeHub cache
-    #   uses: DeterminateSystems/flakehub-cache-action@main
+    - name: 0.4. Setup Magic cache
+      uses: DeterminateSystems/magic-nix-cache-action@main
 
     - name: 0-5. Setup Cachix
       uses: cachix/cachix-action@v15
