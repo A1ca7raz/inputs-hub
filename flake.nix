@@ -163,6 +163,10 @@ rec {
           ];
         };
       };
+
+      homeModules = with inputs; {
+        sops = sops-nix.homeManagerModule;
+      };
     };
 
   nixConfig = {
