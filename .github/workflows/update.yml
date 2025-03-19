@@ -37,20 +37,11 @@ jobs:
     - name: 0-1. Checkout repository
       uses: actions/checkout@v4
 
-    - name: 0-2. Install Nix (Determinate Nix)
-      uses: DeterminateSystems/nix-installer-action@main
-      with:
-        # determinate: true
-        extra-conf: |
-          extra-substituters = https://a1ca7raz-nur.cachix.org https://cache.garnix.io
-          extra-trusted-public-keys = a1ca7raz-nur.cachix.org-1:twTlSh62806B8lfG0QQzge4l5srn9Z8/xxyAFauOZnQ= cache.garnix.io:CTFPyKSLcx5RMJKfLo5EEPUObbA78b0YQ2DTCJXqr9g=
-
-    # NOTE: Go fuck yourself with no public cache
-    # - name: 0.3. Setup FlakeHub cache
-    #   uses: DeterminateSystems/flakehub-cache-action@main
+    - name: 0-2. Install Nix
+      uses: nixbuild/nix-quick-install-action@v30
 
     - name: 1-1. Update flake.lock
-      if: ${{ inputs.update_lock == true || github.event_name != 'workflow_dispatch' }}
+      if: ${{ inputs.update_lock == true || github.event_name == 'schedule' }}
       run: nix flake update
 
     - name: 2-1. Show flake metadata
@@ -59,17 +50,18 @@ jobs:
       run: |
         nix flake metadata
         echo "packages=`nix eval --json .#packages.x86_64-linux --apply 'builtins.attrNames'`" >> $GITHUB_OUTPUT
+        echo "packages_raw=\"`nix eval --raw .#packages.x86_64-linux --apply 'x: with builtins; concatStringsSep " " (attrNames x)'`\"" >> $GITHUB_OUTPUT
 
     - name: 2-2. Show flake information
       if: ${{ always() }}
       run: nix flake show
 
     - name: 2-3. Check evaluation
-      if: ${{ inputs.skip_check == false || github.event_name != 'workflow_dispatch' }}
+      if: ${{ inputs.skip_check == false || github.event_name == 'schedule' }}
       run: nix flake check --no-build --no-allow-import-from-derivation
 
     - name: 3-1. Bump flake.lock
-      if: ${{ inputs.update_lock == true || github.event_name != 'workflow_dispatch' }}
+      if: ${{ inputs.update_lock == true || github.event_name == 'schedule' }}
       uses: stefanzweifel/git-auto-commit-action@v5
       with:
         commit_message: "Update: flake.lock"
@@ -80,6 +72,7 @@ jobs:
     secrets: inherit
     permissions:
       contents: write
+      actions: write
     strategy:
       fail-fast: false
       matrix:

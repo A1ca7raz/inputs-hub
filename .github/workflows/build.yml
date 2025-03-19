@@ -32,11 +32,17 @@ on:
         default: false
         type: boolean
 
+env:
+  nix_conf: |
+    keep-env-derivations = true
+    keep-outputs = true
+
 jobs:
   build:
     runs-on: ubuntu-latest
     permissions:
       contents: write
+      actions: write
     env:
       CI_MODE: 1
       CACHIX_CACHE: ${{ secrets.CACHIX_CACHE }}
@@ -58,19 +64,24 @@ jobs:
       with:
         ref: 'main'
 
-    - name: 0-3. Install Nix (Determinate Nix)
-      uses: DeterminateSystems/nix-installer-action@main
+    - name: 0-3. Install Nix
+      uses: nixbuild/nix-quick-install-action@v30
       with:
-        # determinate: true
-        extra-conf: |
-          extra-substituters = https://a1ca7raz-nur.cachix.org https://cache.garnix.io
-          extra-trusted-public-keys = a1ca7raz-nur.cachix.org-1:twTlSh62806B8lfG0QQzge4l5srn9Z8/xxyAFauOZnQ= cache.garnix.io:CTFPyKSLcx5RMJKfLo5EEPUObbA78b0YQ2DTCJXqr9g=
+        nix_conf: ${{ env.nix_conf }}
 
-    - name: 0.4. Setup Magic cache
-      uses: DeterminateSystems/magic-nix-cache-action@main
+    - name: 0.4. Setup cache
+      uses: nix-community/cache-nix-action@v6
+      with:
+        primary-key: hub-${{ runner.os }}-individual-${{ inputs.package }}-${{ hashFiles('flake.lock') }}
+        restore-prefixes-first-match: hub-${{ runner.os }}-shared-${{ hashFiles('flake.lock') }}
+        gc-max-store-size-linux: 1G
+        purge: true
+        purge-prefixes: hub-${{ runner.os }}-individual-${{ inputs.package }}-
+        purge-created: 0
+        purge-primary-key: never
 
     - name: 0-5. Setup Cachix
-      uses: cachix/cachix-action@v15
+      uses: cachix/cachix-action@v16
       with:
         name: '${{ secrets.CACHIX_CACHE }}'
         authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
@@ -91,11 +102,6 @@ jobs:
     - name: 2-1. Build ${{ inputs.package }}
       run: |
         nix build .#packages.x86_64-linux.${{ inputs.package }} -v --show-trace
-
-    # - name: 2-2. Build entire nurpkgs
-    #   if: ${{ inputs.package == 0 }}
-    #   run: |
-    #     nix flake check --no-allow-import-from-derivation -v --show-trace
 
     - name: 3-1. Push cache to Cachix
       if: ${{ inputs.push_cache == true }}
