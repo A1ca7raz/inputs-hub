@@ -84,7 +84,7 @@ jobs:
     with:
       package: ${{ matrix.package }}
 
-  call_nur:
+  trigger_downstream:
     needs: build
     if: ${{ success() }}
     runs-on: ubuntu-latest
