@@ -49,15 +49,15 @@ jobs:
       CACHIX_AUTH_TOKEN: ${{ secrets.CACHIX_AUTH_TOKEN }}
 
     steps:
-    - name: 0-1. Maximize space
-      run: |
-        sudo rm -rf /usr/share/dotnet
-        sudo rm -rf /usr/local/lib/android
-        sudo rm -rf /opt/ghc
-        sudo -E apt-get -qq autoremove --purge
-        sudo -E apt-get -qq clean
-        echo "Available space:"
-        df -h
+    # - name: 0-1. Maximize space
+    #   run: |
+    #     sudo rm -rf /usr/share/dotnet
+    #     sudo rm -rf /usr/local/lib/android
+    #     sudo rm -rf /opt/ghc
+    #     sudo -E apt-get -qq autoremove --purge
+    #     sudo -E apt-get -qq clean
+    #     echo "Available space:"
+    #     df -h
 
     - name: 0-2. Checkout repository
       uses: actions/checkout@v4
