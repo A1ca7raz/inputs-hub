@@ -23,6 +23,12 @@ rec {
     };
 
     # 3rd-party flakes
+    colmena = {
+      url = "github:zhaofengli/colmena";
+      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.flake-compat.follows = "flake-compat";
+      inputs.flake-utils.follows = "flake-utils";
+    };
     disko = {
       url = "github:nix-community/disko";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -140,6 +146,7 @@ rec {
       overlays.external = final: prev: self.packages.x86_64-linux;
 
       nixosModules = with inputs; {
+        colmena = colmena.nixosModules.deploymentOptions;
         disko = disko.nixosModules.disko;
         home-manager = home-manager.nixosModules.home-manager;
         impermanence = impermanence.nixosModules.impermanence;
