@@ -71,7 +71,7 @@ jobs:
       uses: nix-community/cache-nix-action@v6
 
     - name: 0-5. Setup Cachix
-      uses: cachix/cachix-action@v15
+      uses: cachix/cachix-action@v16
       with:
         name: '${{ secrets.CACHIX_CACHE }}'
         authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
