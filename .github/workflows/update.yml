@@ -37,17 +37,8 @@ jobs:
     - name: 0-1. Checkout repository
       uses: actions/checkout@v4
 
-    - name: 0-2. Install Nix (Determinate Nix)
-      uses: DeterminateSystems/nix-installer-action@main
-      with:
-        # determinate: true
-        extra-conf: |
-          extra-substituters = https://a1ca7raz-nur.cachix.org https://cache.garnix.io
-          extra-trusted-public-keys = a1ca7raz-nur.cachix.org-1:twTlSh62806B8lfG0QQzge4l5srn9Z8/xxyAFauOZnQ= cache.garnix.io:CTFPyKSLcx5RMJKfLo5EEPUObbA78b0YQ2DTCJXqr9g=
-
-    # NOTE: Go fuck yourself with no public cache
-    # - name: 0.3. Setup FlakeHub cache
-    #   uses: DeterminateSystems/flakehub-cache-action@main
+    - name: 0-2. Install Nix
+      uses: nixbuild/nix-quick-install-action@v30
 
     - name: 1-1. Update flake.lock
       if: ${{ inputs.update_lock == true || github.event_name != 'workflow_dispatch' }}
