@@ -134,6 +134,10 @@ rec {
             veracrypt
             wpsoffice
           ;
+          inherit (pkgs.jetbrains)
+            goland
+            datagrip
+          ;
         } // legacyPackages
           // mkBundle "lanzaboote" inputs.lanzaboote.packages.${system}
           // mkBundle "nix-index-database" inputs.nix-index-database.packages.${system}
