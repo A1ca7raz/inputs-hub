@@ -137,6 +137,7 @@ rec {
           inherit (pkgs.jetbrains)
             goland
             datagrip
+            rider
           ;
         } // legacyPackages
           // mkBundle "lanzaboote" inputs.lanzaboote.packages.${system}
