@@ -63,6 +63,29 @@
         "type": "github"
       }
     },
+    "dns": {
+      "inputs": {
+        "flake-utils": [
+          "flake-utils"
+        ],
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1737653493,
+        "narHash": "sha256-qTbv8Pm9WWF63M5Fj0Od9E54/lsbMSQUBHw/s30eFok=",
+        "owner": "nix-community",
+        "repo": "dns.nix",
+        "rev": "96e548ae8bd44883afc5bddb9dacd0502542276d",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nix-community",
+        "repo": "dns.nix",
+        "type": "github"
+      }
+    },
     "flake-compat": {
       "flake": false,
       "locked": {
@@ -499,6 +522,7 @@
         "colmena": "colmena",
         "crane": "crane",
         "disko": "disko",
+        "dns": "dns",
         "flake-compat": "flake-compat",
         "flake-parts": "flake-parts",
         "flake-utils": "flake-utils",
