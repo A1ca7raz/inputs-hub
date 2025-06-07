@@ -106,4 +106,4 @@ jobs:
         MESSAGE: "🟢 [inputs-hub](https://github.com/A1ca7raz/inputs-hub) has been updated."
       run: |
         pip install apprise
-        apprise -vv -b "$MESSAGE" "tgram://$BOT_KEY/$RECEIVER_ID/?format=markdown"
+        apprise -vv -b "$MESSAGE" "tgram://$BOT_KEY/$RECEIVER_ID/?format=markdown" || true # Force complete task
