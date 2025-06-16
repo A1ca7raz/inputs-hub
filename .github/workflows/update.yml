@@ -65,7 +65,7 @@ jobs:
 
     - name: 3-1. Bump flake.lock
       if: ${{ inputs.update_lock == true || github.event_name == 'schedule' }}
-      uses: stefanzweifel/git-auto-commit-action@v5
+      uses: stefanzweifel/git-auto-commit-action@v6
       with:
         commit_message: "Update: flake.lock"
         file_pattern: "flake.lock"
