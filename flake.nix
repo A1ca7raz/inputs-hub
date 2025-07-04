@@ -136,8 +136,8 @@ rec {
       in rec {
         # Packages from external flakes
         legacyPackages = {
-          kwin-effects-forceblur = pkgs.kdePackages.callPackage (inputs.kwin-effects-forceblur + "/package.nix") {};
-          kwin-gestures = pkgs.kdePackages.callPackage (inputs.kwin-gestures + "/package.nix") {};
+          kwin-effects-forceblur = pkgs.kdePackages.callPackage (inputs.kwin-effects-forceblur + "/nix/package.nix") {};
+          kwin-gestures = pkgs.kdePackages.callPackage (inputs.kwin-gestures + "/nix/package-kwin.nix") {};
 
           inherit (inputs.nur-cryolitia.packages."${system}")
             maa-cli-nightly
