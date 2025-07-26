@@ -94,13 +94,6 @@ rec {
       inputs.nixpkgs.follows = "nixpkgs";
       inputs.systems.follows = "flake-utils/systems";
     };
-
-    # Steal packages from others' NUR (XD)
-    nur-cryolitia = {
-      url = "github:Cryolitia/nur-packages";
-      inputs.nixpkgs.follows = "nixpkgs";
-      inputs.rust-overlay.follows = "rust-overlay";
-    };
   };
 
   # 1. export nixos modules from external flakes
@@ -138,10 +131,6 @@ rec {
         legacyPackages = {
           kwin-effects-forceblur = pkgs.kdePackages.callPackage (inputs.kwin-effects-forceblur + "/nix/package.nix") {};
           kwin-gestures = pkgs.kdePackages.callPackage (inputs.kwin-gestures + "/nix/package-kwin.nix") {};
-
-          inherit (inputs.nur-cryolitia.packages."${system}")
-            maa-cli-nightly
-          ;
         };
 
         # With packages from nixpkgs that request cache
