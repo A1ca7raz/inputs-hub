@@ -141,6 +141,8 @@ rec {
             unrar
             veracrypt
             wpsoffice
+            teamspeak3
+            teamspeak_server
           ;
           # inherit (pkgs.jetbrains)
           #   goland
