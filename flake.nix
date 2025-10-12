@@ -10,6 +10,7 @@ rec {
       inputs.nixpkgs-lib.follows = "nixpkgs-lib";
     };
     flake-utils.url = "github:numtide/flake-utils";
+    nix-std.url = "github:chessai/nix-std";
 
     # Dependencies of 3rd-party flakes
     crane.url = "github:ipetkov/crane";
