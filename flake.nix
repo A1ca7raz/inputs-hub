@@ -64,19 +64,16 @@ rec {
       inputs.nixpkgs.follows = "nixpkgs";
       inputs.utils.follows = "flake-utils";
     };
-    kwin-gestures = {
-      url = "github:taj-ny/kwin-gestures";
-      inputs.nixpkgs.follows = "nixpkgs";
-      inputs.utils.follows = "flake-utils";
-    };
+    # kwin-gestures = {
+    #   url = "github:taj-ny/kwin-gestures";
+    #   inputs.nixpkgs.follows = "nixpkgs";
+    #   inputs.utils.follows = "flake-utils";
+    # };
     lanzaboote = {
       url = "github:nix-community/lanzaboote";
       inputs.nixpkgs.follows = "nixpkgs";
-      inputs.flake-parts.follows = "flake-parts";
-      inputs.pre-commit-hooks-nix.follows = "";
       inputs.crane.follows = "crane";
       inputs.rust-overlay.follows = "rust-overlay";
-      inputs.flake-compat.follows = "flake-compat";
     };
     nix-index-database = {
       url = "github:nix-community/nix-index-database";
@@ -131,7 +128,7 @@ rec {
         # Packages from external flakes
         legacyPackages = {
           kwin-effects-forceblur = pkgs.kdePackages.callPackage (inputs.kwin-effects-forceblur + "/nix/package.nix") {};
-          kwin-gestures = pkgs.kdePackages.callPackage (inputs.kwin-gestures + "/nix/package-kwin.nix") {};
+          # kwin-gestures = pkgs.kdePackages.callPackage (inputs.kwin-gestures + "/nix/package-kwin.nix") {};
         };
 
         # With packages from nixpkgs that request cache
