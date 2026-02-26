@@ -18,6 +18,10 @@ rec {
       url = "github:edolstra/flake-compat";
       flake = false;
     };
+    noctalia-qs = {
+      url = "github:noctalia-dev/noctalia-qs";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     pyproject-nix = {
       url = "github:pyproject-nix/pyproject.nix";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -83,6 +87,11 @@ rec {
       url = "github:nixpak/nixpak";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    noctalia = {
+      url = "github:noctalia-dev/noctalia-shell";
+      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.noctalia-qs.follows = "noctalia-qs";
+    };
     sops-nix = {
       url = "github:Mic92/sops-nix";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -128,6 +137,7 @@ rec {
         # Packages from external flakes
         legacyPackages = {
           kwin-effects-forceblur = pkgs.kdePackages.callPackage (inputs.kwin-effects-forceblur + "/nix/package.nix") {};
+          noctalia-nighty = inputs.noctalia.packages.${pkgs.stdenv.hostPlatform.system}.default.override { calendarSupport = true; };
           # kwin-gestures = pkgs.kdePackages.callPackage (inputs.kwin-gestures + "/nix/package-kwin.nix") {};
         };
 
@@ -164,6 +174,7 @@ rec {
         impermanence = impermanence.nixosModules.impermanence;
         lanzaboote = lanzaboote.nixosModules.lanzaboote;
         nix-index-database = nix-index-database.nixosModules.nix-index;
+        noctalia = noctalia.nixosModules.default;
         sops = sops-nix.nixosModules.sops;
 
         helper = {
@@ -177,6 +188,7 @@ rec {
       };
 
       homeModules = with inputs; {
+        noctalia = noctalia.homeModules.default;
         sops = sops-nix.homeManagerModule;
       };
     };
