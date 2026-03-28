@@ -70,7 +70,7 @@ rec {
       inputs.rust-overlay.follows = "rust-overlay";
     };
     niri = {
-      url = "github:niri-wm/niri";
+      url = "github:niri-wm/niri/wip/branch";
       inputs.nixpkgs.follows = "nixpkgs";
       inputs.rust-overlay.follows = "rust-overlay";
     };
@@ -132,14 +132,7 @@ rec {
         # Packages from external flakes
         legacyPackages = {
           noctalia-nighty = inputs.noctalia.packages.${pkgs.stdenv.hostPlatform.system}.default.override { calendarSupport = true; };
-          niri-nighty = inputs.niri.packages.${pkgs.stdenv.hostPlatform.system}.niri.overrideAttrs (p: {
-            patches = p.patches ++ [
-              (pkgs.fetchpatch {
-                url = "https://patch-diff.githubusercontent.com/raw/niri-wm/niri/pull/3483.patch";
-                hash = "sha256-zwL43qtHxb4ibWOs1nlLVWNHna+zKLWB2BWJ5qV1ozg=";
-              })
-            ];
-          });
+          niri-nighty = inputs.niri.packages.${pkgs.stdenv.hostPlatform.system}.niri;
         };
 
         # With packages from nixpkgs that request cache
