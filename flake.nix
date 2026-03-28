@@ -63,20 +63,15 @@ rec {
       inputs.nixpkgs.follows = "nixpkgs";
     };
     impermanence.url = "github:nix-community/impermanence";
-    kwin-effects-forceblur = {
-      url = "github:xarblu/kwin-effects-better-blur-dx";
-      inputs.nixpkgs.follows = "nixpkgs";
-      inputs.utils.follows = "flake-utils";
-    };
-    # kwin-gestures = {
-    #   url = "github:taj-ny/kwin-gestures";
-    #   inputs.nixpkgs.follows = "nixpkgs";
-    #   inputs.utils.follows = "flake-utils";
-    # };
     lanzaboote = {
       url = "github:nix-community/lanzaboote";
       inputs.nixpkgs.follows = "nixpkgs";
       inputs.crane.follows = "crane";
+      inputs.rust-overlay.follows = "rust-overlay";
+    };
+    niri = {
+      url = "github:niri-wm/niri";
+      inputs.nixpkgs.follows = "nixpkgs";
       inputs.rust-overlay.follows = "rust-overlay";
     };
     nix-index-database = {
@@ -136,9 +131,8 @@ rec {
       in rec {
         # Packages from external flakes
         legacyPackages = {
-          kwin-effects-forceblur = pkgs.kdePackages.callPackage (inputs.kwin-effects-forceblur + "/nix/package.nix") {};
           noctalia-nighty = inputs.noctalia.packages.${pkgs.stdenv.hostPlatform.system}.default.override { calendarSupport = true; };
-          # kwin-gestures = pkgs.kdePackages.callPackage (inputs.kwin-gestures + "/nix/package-kwin.nix") {};
+          niri-nighty = inputs.niri.packages.${pkgs.stdenv.hostPlatform.system}.niri;
         };
 
         # With packages from nixpkgs that request cache
