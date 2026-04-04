@@ -87,6 +87,7 @@ rec {
       inputs.nixpkgs.follows = "nixpkgs";
       inputs.noctalia-qs.follows = "noctalia-qs";
     };
+    quadlet-nix.url = "github:SEIAROTg/quadlet-nix";
     sops-nix = {
       url = "github:Mic92/sops-nix";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -169,6 +170,7 @@ rec {
         lanzaboote = lanzaboote.nixosModules.lanzaboote;
         nix-index-database = nix-index-database.nixosModules.nix-index;
         noctalia = noctalia.nixosModules.default;
+        quadlet = quadlet-nix.nixosModules.quadlet;
         sops = sops-nix.nixosModules.sops;
 
         helper = {
@@ -183,6 +185,7 @@ rec {
 
       homeModules = with inputs; {
         noctalia = noctalia.homeModules.default;
+        quadlet = quadlet-nix.homeManagerModule.quadlet;
         sops = sops-nix.homeManagerModule;
       };
     };
