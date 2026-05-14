@@ -22,6 +22,10 @@ rec {
       url = "github:noctalia-dev/noctalia-qs";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    npm-lockfile-fix = {
+      url = "github:jeslie0/npm-lockfile-fix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     pyproject-nix = {
       url = "github:pyproject-nix/pyproject.nix";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -58,6 +62,15 @@ rec {
       inputs.nixpkgs.follows = "nixpkgs";
       inputs.flake-utils.follows = "flake-utils";
     };
+    hermes-agent = {
+      url = "github:NousResearch/hermes-agent";
+      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.flake-parts.follows = "flake-parts";
+      inputs.pyproject-nix.follows = "pyproject-nix";
+      inputs.uv2nix.follows = "uv2nix";
+      inputs.pyproject-build-systems.follows = "pyproject-build-systems";
+      inputs.npm-lockfile-fix.follows = "npm-lockfile-fix";
+    };
     home-manager = {
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -70,7 +83,7 @@ rec {
       inputs.rust-overlay.follows = "rust-overlay";
     };
     niri = {
-      url = "github:niri-wm/niri/wip/branch";
+      url = "github:niri-wm/niri";
       inputs.nixpkgs.follows = "nixpkgs";
       inputs.rust-overlay.follows = "rust-overlay";
     };
@@ -132,8 +145,9 @@ rec {
       in rec {
         # Packages from external flakes
         legacyPackages = {
-          noctalia-nighty = inputs.noctalia.packages.${pkgs.stdenv.hostPlatform.system}.default.override { calendarSupport = true; };
+          hermes-agent = inputs.hermes-agent.packages.${pkgs.stdenv.hostPlatform.system}.default;
           niri-nighty = inputs.niri.packages.${pkgs.stdenv.hostPlatform.system}.niri;
+          noctalia-nighty = inputs.noctalia.packages.${pkgs.stdenv.hostPlatform.system}.default.override { calendarSupport = true; };
         };
 
         # With packages from nixpkgs that request cache
@@ -165,6 +179,7 @@ rec {
       nixosModules = with inputs; {
         colmena = colmena.nixosModules.deploymentOptions;
         disko = disko.nixosModules.disko;
+        hermes = hermes-agent.nixosModules.default;
         home-manager = home-manager.nixosModules.home-manager;
         impermanence = impermanence.nixosModules.impermanence;
         lanzaboote = lanzaboote.nixosModules.lanzaboote;
