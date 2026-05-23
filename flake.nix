@@ -57,6 +57,11 @@ rec {
       url = "github:nix-community/disko";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    dms = {
+      url = "github:AvengeMedia/DankMaterialShell";
+      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.flake-compat.follows = "flake-compat";
+    };
     dns = {
       url = "github:nix-community/dns.nix";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -148,6 +153,7 @@ rec {
           hermes-agent = inputs.hermes-agent.packages.${pkgs.stdenv.hostPlatform.system}.default;
           niri-nighty = inputs.niri.packages.${pkgs.stdenv.hostPlatform.system}.niri;
           noctalia-nighty = inputs.noctalia.packages.${pkgs.stdenv.hostPlatform.system}.default.override { calendarSupport = true; };
+          dms-nighty = inputs.dms.packages.${pkgs.stdenv.hostPlatform.system}.default;
         };
 
         # With packages from nixpkgs that request cache

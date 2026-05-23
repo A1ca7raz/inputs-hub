@@ -63,6 +63,29 @@
         "type": "github"
       }
     },
+    "dms": {
+      "inputs": {
+        "flake-compat": [
+          "flake-compat"
+        ],
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1779455141,
+        "narHash": "sha256-e3u0LZbs9M4S+h6Qj/yj2Z0HJLqesjcO63lnJyNHB0Q=",
+        "owner": "AvengeMedia",
+        "repo": "DankMaterialShell",
+        "rev": "0b55fbcb152b80ed41ac0486e896a3b9f2c85659",
+        "type": "github"
+      },
+      "original": {
+        "owner": "AvengeMedia",
+        "repo": "DankMaterialShell",
+        "type": "github"
+      }
+    },
     "dns": {
       "inputs": {
         "flake-utils": [
@@ -651,6 +674,7 @@
         "colmena": "colmena",
         "crane": "crane",
         "disko": "disko",
+        "dms": "dms",
         "dns": "dns",
         "flake-compat": "flake-compat",
         "flake-parts": "flake-parts",
