@@ -15,7 +15,7 @@ rec {
     # Dependencies of 3rd-party flakes
     crane.url = "github:ipetkov/crane";
     flake-compat = {
-      url = "github:edolstra/flake-compat";
+      url = "github:NixOS/flake-compat";
       flake = false;
     };
     noctalia-qs = {
@@ -52,6 +52,7 @@ rec {
       inputs.nixpkgs.follows = "nixpkgs";
       inputs.flake-compat.follows = "flake-compat";
       inputs.flake-utils.follows = "flake-utils";
+      inputs.nix-github-actions.follows = "";
     };
     disko = {
       url = "github:nix-community/disko";
@@ -87,18 +88,15 @@ rec {
       inputs.crane.follows = "crane";
       inputs.rust-overlay.follows = "rust-overlay";
     };
-    niri = {
-      url = "github:niri-wm/niri";
+    niri-flake = {
+      url = "github:sodiboo/niri-flake";
       inputs.nixpkgs.follows = "nixpkgs";
-      inputs.rust-overlay.follows = "rust-overlay";
-    };
-    nix-index-database = {
-      url = "github:nix-community/nix-index-database";
-      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.nixpkgs-stable.follows = "";
     };
     nixpak = {
       url = "github:nixpak/nixpak";
       inputs.nixpkgs.follows = "nixpkgs";
+      inputs.hercules-ci-effects.follows = "";
     };
     noctalia = {
       url = "github:noctalia-dev/noctalia-shell";
@@ -151,9 +149,13 @@ rec {
         # Packages from external flakes
         legacyPackages = {
           hermes-agent = inputs.hermes-agent.packages.${pkgs.stdenv.hostPlatform.system}.default;
-          niri-nighty = inputs.niri.packages.${pkgs.stdenv.hostPlatform.system}.niri;
           noctalia-nighty = inputs.noctalia.packages.${pkgs.stdenv.hostPlatform.system}.default.override { calendarSupport = true; };
           dms-nighty = inputs.dms.packages.${pkgs.stdenv.hostPlatform.system}.default;
+
+          inherit (inputs.niri-flake.packages.${pkgs.stdenv.hostPlatform.system})
+            niri-unstable
+            xwayland-satellite-unstable
+          ;
         };
 
         # With packages from nixpkgs that request cache
@@ -166,14 +168,8 @@ rec {
             wpsoffice
             teamspeak_server
           ;
-          # inherit (pkgs.jetbrains)
-          #   goland
-          #   datagrip
-          #   rider
-          # ;
         } // legacyPackages
           // mkBundle "lanzaboote" inputs.lanzaboote.packages.${system}
-          // mkBundle "nix-index-database" inputs.nix-index-database.packages.${system}
           // mkBundle "sops-nix" inputs.lanzaboote.packages.${system}
         ;
 
@@ -185,11 +181,19 @@ rec {
       nixosModules = with inputs; {
         colmena = colmena.nixosModules.deploymentOptions;
         disko = disko.nixosModules.disko;
+        dms = dms.nixosModules.dank-material-shell;
         hermes = hermes-agent.nixosModules.default;
         home-manager = home-manager.nixosModules.home-manager;
         impermanence = impermanence.nixosModules.impermanence;
         lanzaboote = lanzaboote.nixosModules.lanzaboote;
-        nix-index-database = nix-index-database.nixosModules.nix-index;
+        niri = { pkgs, lib, ... }: {
+          imports = [
+            niri-flake.nixosModules.niri
+          ];
+
+          programs.niri.package = pkgs.niri-unstable;
+          programs.niri.settings.xwayland-satellite.path = lib.mkDefault (lib.getExe pkgs.xwayland-satellite-unstable);
+        };
         noctalia = noctalia.nixosModules.default;
         quadlet = quadlet-nix.nixosModules.quadlet;
         sops = sops-nix.nixosModules.sops;
@@ -205,6 +209,21 @@ rec {
       };
 
       homeModules = with inputs; {
+        # dms = dms.homeModules.dank-material-shell;
+        dms = { ... }: {
+          imports = with dms.homeModules; [
+            dank-material-shell
+            niri
+          ];
+        };
+        niri = { ... }: {
+          imports = [
+            niri-flake.homeModules.niri
+          ];
+
+          programs.niri.package = pkgs.niri-unstable;
+          programs.niri.settings.xwayland-satellite.path = lib.mkDefault (lib.getExe pkgs.xwayland-satellite-unstable);
+        };
         noctalia = noctalia.homeModules.default;
         quadlet = quadlet-nix.homeManagerModule.quadlet;
         sops = sops-nix.homeManagerModule;
@@ -213,12 +232,12 @@ rec {
 
   nixConfig = {
     extra-substituters = [
-      # "https://cache.garnix.io"
+      "https://cache.garnix.io"
       "https://a1ca7raz-nur.cachix.org"
     ];
 
     extra-trusted-public-keys = [
-      # "cache.garnix.io:CTFPyKSLcx5RMJKfLo5EEPUObbA78b0YQ2DTCJXqr9g="
+      "cache.garnix.io:CTFPyKSLcx5RMJKfLo5EEPUObbA78b0YQ2DTCJXqr9g="
       "a1ca7raz-nur.cachix.org-1:twTlSh62806B8lfG0QQzge4l5srn9Z8/xxyAFauOZnQ="
     ];
   };
