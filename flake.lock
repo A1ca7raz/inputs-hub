@@ -317,6 +317,26 @@
         "type": "github"
       }
     },
+    "kimi-code": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1779710663,
+        "narHash": "sha256-oEmQl8lZxQbgRh63p9AWEXs1ixYv4ICn6k/ngIi7k2k=",
+        "owner": "MoonshotAI",
+        "repo": "kimi-code",
+        "rev": "0f745256952eac4ea3a340a25d4acd927a0f61be",
+        "type": "github"
+      },
+      "original": {
+        "owner": "MoonshotAI",
+        "repo": "kimi-code",
+        "type": "github"
+      }
+    },
     "lanzaboote": {
       "inputs": {
         "crane": [
@@ -651,6 +671,7 @@
         "hermes-agent": "hermes-agent",
         "home-manager": "home-manager",
         "impermanence": "impermanence",
+        "kimi-code": "kimi-code",
         "lanzaboote": "lanzaboote",
         "niri-flake": "niri-flake",
         "nix-std": "nix-std",

@@ -82,6 +82,10 @@ rec {
       inputs.nixpkgs.follows = "nixpkgs";
     };
     impermanence.url = "github:nix-community/impermanence";
+    kimi-code = {
+      url = "github:MoonshotAI/kimi-code";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     lanzaboote = {
       url = "github:nix-community/lanzaboote";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -147,12 +151,13 @@ rec {
         };
       in rec {
         # Packages from external flakes
-        legacyPackages = {
-          hermes-agent = inputs.hermes-agent.packages.${pkgs.stdenv.hostPlatform.system}.default;
-          noctalia-nighty = inputs.noctalia.packages.${pkgs.stdenv.hostPlatform.system}.default.override { calendarSupport = true; };
-          dms-nighty = inputs.dms.packages.${pkgs.stdenv.hostPlatform.system}.default;
+        legacyPackages = with inputs; {
+          hermes-agent = hermes-agent.packages.${pkgs.stdenv.hostPlatform.system}.default;
+          kimi-code-unstable = kimi-code.packages.${pkgs.stdenv.hostPlatform.system}.default;
+          noctalia-nighty = noctalia.packages.${pkgs.stdenv.hostPlatform.system}.default.override { calendarSupport = true; };
+          dms-nighty = dms.packages.${pkgs.stdenv.hostPlatform.system}.default;
 
-          inherit (inputs.niri-flake.packages.${pkgs.stdenv.hostPlatform.system})
+          inherit (niri-flake.packages.${pkgs.stdenv.hostPlatform.system})
             niri-unstable
             xwayland-satellite-unstable
           ;
